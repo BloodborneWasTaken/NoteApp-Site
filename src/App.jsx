@@ -1,12 +1,14 @@
-import Nav from "./components/Nav/Nav";
+import Header from "./components/Header/Header";
+import Sidebar from "./components/Sidebar/Sidebar";
 function App() {
   return (
-    <div className="p-[40px] font-normal">
-      <Nav />
-      <h1 className="flex justify-center text-[100px] mt-3">
-        Browse everything.
-      </h1>
-      <div className=" flex justify-center bg-[#8E9C78] w-[1200px] h-[362px] rounded-[30px] mt-[50px]"></div>
+    <div className="font-normal bg-[#49f0ff56] flex">
+      <div>
+        <Sidebar />
+      </div>
+      <div>
+        <Header />
+      </div>
     </div>
   );
 }
