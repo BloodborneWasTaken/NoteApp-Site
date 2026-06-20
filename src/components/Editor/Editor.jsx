@@ -32,7 +32,7 @@ function Editor({ notes, setNotes, note, onSave, onDelete }) {
 
   return (
     <div>
-      <div className="flex flex-col bg-white w-[39.5vw] h-[80vh] rounded-[15px] p-4 ">
+      <div className="flex flex-col bg-white w-[39.5vw] h-[80vh] rounded-[15px] p-4 overflow-x-scroll ">
         <dir className="flex justify-between">
           <p className="font-light">
             مشاهده یادداشت

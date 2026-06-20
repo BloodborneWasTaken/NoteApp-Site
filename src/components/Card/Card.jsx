@@ -14,17 +14,6 @@ function Card({ note, onSelect, isActive, onDelete }) {
             {note.category}
           </p>
         </div>
-        <div className="flex gap-1 w-[15vw] pr-15 mr-[15vw] mt-[-20px] ">
-          <li className="bg-[#7a00b2] text-center w-[70px] h-[30px] text-white rounded-[10px] cursor-pointer">
-            ویرایش
-          </li>
-          <li
-            onClick={onDelete}
-            className="bg-red-200 text-center w-[70px] h-[30px] text-red-600 rounded-[10px] cursor-pointer"
-          >
-            حذف
-          </li>
-        </div>
         <p>{note.title}</p>
         <p className="font-light"> {note.snippet}</p>
         <p className="font-light">{note.date}</p>
