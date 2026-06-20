@@ -33,14 +33,14 @@ function App() {
   ]);
   const [selectedNote, setSelectedNote] = useState(notes);
 
-  const updateNote = (updatedNote) => {
+  const updateNoteHandller = (updatedNote) => {
     const newNotes = notes.map((singleNote) =>
       singleNote.id === updatedNote.id ? updatedNote : singleNote,
     );
     setNotes(() => newNotes);
   };
 
-  const deleteNote = (id) => {
+  const deleteNoteHandller = (id) => {
     const newNotes = notes.filter((singleNote) => singleNote.id !== id);
     setNotes(() => newNotes);
     if (selectedNote?.id === id) {
@@ -52,6 +52,24 @@ function App() {
     }
   };
 
+  const createNoteHandller = () => {
+    const now = new Date();
+    const newNote = {
+      id: Date.now,
+      title: "یادداشت جدید",
+      snippet: "",
+      category: "عمومی",
+      date: new Intl.DateTimeFormat("fa-IR-u-ca-persian", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+      }).format(now),
+    };
+    const newNotes = [newNote, ...notes];
+    setNotes(newNotes);
+    setSelectedNote(newNote.id)
+  };
+
   return (
     <div className="font-normal bg-[#b2b2b236] flex">
       <div>
@@ -60,12 +78,13 @@ function App() {
       <div>
         <Header
           note={selectedNote}
-          onDelete={deleteNote}
+          onDelete={deleteNoteHandller}
           notes={notes}
           setNotes={setNotes}
           onSelect={setSelectedNote}
           selected={selectedNote}
-          onSave={updateNote}
+          onSave={updateNoteHandller}
+          onCreate={createNoteHandller}
         />
       </div>
     </div>

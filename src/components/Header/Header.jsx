@@ -10,6 +10,7 @@ function Header({
   selected,
   onSave,
   onDelete,
+  onCreate,
 }) {
   return (
     <div className="font-semibold p-4 ml-2.5">
@@ -40,6 +41,7 @@ function Header({
           notes={notes}
           setNotes={setNotes}
           onSave={onSave}
+          onCreate={onCreate}
         />
       </div>
     </div>
