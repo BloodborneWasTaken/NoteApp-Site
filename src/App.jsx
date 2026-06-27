@@ -1,48 +1,45 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Header from "./components/Header/Header";
 import Sidebar from "./components/Sidebar/Sidebar";
+
 function App() {
-  const [notes, setNotes] = useState([
-    {
-      id: 1,
-      title: "ایده پروژه",
-      snippet: "ساخت یک اپ مدیریت یادداشت با ReactوTailwind",
-      content: "متن کامل یادداشت...",
-      category: "ایده",
-      date: "1403/09/12",
-      isPinned: true,
-    },
-    {
-      id: 2,
-      title: "مطالب کلاس",
-      snippet: "آموزش props,state,React",
-      content: "جزئیات یادداشت...",
-      category: "آموزش",
-      date: "1403/09/10",
-      isPinned: false,
-    },
-    {
-      id: 3,
-      title: "لیست",
-      snippet: "اماده سازی تمرین برای دانشجو ها",
-      content: "جزئیات یادداشت...",
-      category: "کار",
-      date: "1403/09/9",
-      isPinned: false,
-    },
-  ]);
+  const [notes, setNotes] = useState(
+    JSON.parse(localStorage.getItem("notes")) || [],
+  );
+  const [search, setSearch] = useState("");
   const [selectedNote, setSelectedNote] = useState(notes);
+  const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
+
+  useEffect(() => {
+    localStorage.setItem("notes", JSON.stringify(notes));
+  }, [notes]);
+
+  // اعمال دارک مود
+  useEffect(() => {
+    localStorage.setItem("theme", theme);
+
+    if (theme === "dark") {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }, [theme]);
+
+  const fillteredNotes = notes.filter((note) =>
+    note.title.toLowerCase().includes(search.toLowerCase()),
+  );
 
   const updateNoteHandller = (updatedNote) => {
     const newNotes = notes.map((singleNote) =>
       singleNote.id === updatedNote.id ? updatedNote : singleNote,
     );
-    setNotes(() => newNotes);
+    setNotes(newNotes);
   };
 
   const deleteNoteHandller = (id) => {
     const newNotes = notes.filter((singleNote) => singleNote.id !== id);
-    setNotes(() => newNotes);
+    setNotes(newNotes);
+
     if (selectedNote?.id === id) {
       if (newNotes.length > 0) {
         setSelectedNote(newNotes[0]);
@@ -54,37 +51,48 @@ function App() {
 
   const createNoteHandller = () => {
     const now = new Date();
+
     const newNote = {
-      id: Date.now,
+      id: Date.now(),
       title: "یادداشت جدید",
       snippet: "",
-      category: "عمومی",
+      category: "دسته",
       date: new Intl.DateTimeFormat("fa-IR-u-ca-persian", {
         year: "numeric",
         month: "2-digit",
         day: "2-digit",
       }).format(now),
     };
+
     const newNotes = [newNote, ...notes];
     setNotes(newNotes);
-    setSelectedNote(newNote.id)
+    setSelectedNote(newNote.id);
   };
 
   return (
-    <div className="font-normal bg-[#b2b2b236] flex">
+    <div
+      className={`font-normal flex ${
+        theme === "dark" ? "bg-gray-800 text-white" : "bg-slate-100 text-black"
+      }`}
+    >
       <div>
-        <Sidebar />
+        <Sidebar theme={theme} />
       </div>
-      <div>
+
+      <div className="flex-1">
         <Header
           note={selectedNote}
           onDelete={deleteNoteHandller}
-          notes={notes}
+          notes={fillteredNotes}
           setNotes={setNotes}
           onSelect={setSelectedNote}
           selected={selectedNote}
           onSave={updateNoteHandller}
           onCreate={createNoteHandller}
+          search={search}
+          setSearch={setSearch}
+          theme={theme}
+          setTheme={setTheme}
         />
       </div>
     </div>
