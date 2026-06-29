@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { NoteContext } from "../../Context/Context";
 
-function Editor({ notes, setNotes, note, onSave, onDelete, theme }) {
+function Editor({ onSave, note, onDelete }) {
   const [title, setTitle] = useState(note?.title || "");
   const [snippet, setSnippet] = useState(note?.snippet || "");
   const [category, setCategory] = useState(note?.category || "");
+  const { state, dispatch } = useContext(NoteContext);
 
-  // تشخیص اینکه آیا حالت دارک فعال است یا خیر
-  const isDark = theme === "dark";
+  const isDark = state.theme === "dark";
 
   useEffect(() => {
     if (note) {
@@ -24,15 +25,13 @@ function Editor({ notes, setNotes, note, onSave, onDelete, theme }) {
         snippet,
         category,
       };
-      onSave(updatedNote);
+      dispatch({
+        type: "UPDATE_NOTE",
+        payloud: updatedNote,
+      });
     }
   }, [title, snippet, category]);
 
-  const handleDelete = () => {
-    onDelete(note.id);
-  };
-
-  // حالت زمانی که یادداشتی انتخاب نشده است
   if (!note) {
     return (
       <div
@@ -63,16 +62,6 @@ function Editor({ notes, setNotes, note, onSave, onDelete, theme }) {
             </p>
             <h3 className="font-bold text-2xl break-all">{title}</h3>
           </div>
-
-          <ul className="flex gap-1">
-            <li
-              onClick={handleDelete}
-              className={`text-center w-[70px] h-[30px] flex items-center justify-center rounded-[10px] cursor-pointer transition-colors
-                ${isDark ? "bg-red-900/30 text-red-400 hover:bg-red-800" : "bg-red-100 text-red-600 hover:bg-red-200"}`}
-            >
-              حذف
-            </li>
-          </ul>
         </div>
 
         <p
@@ -81,7 +70,6 @@ function Editor({ notes, setNotes, note, onSave, onDelete, theme }) {
           دسته بندی: {category} | تاریخ: {note.date}
         </p>
 
-        {/* فیلد عنوان */}
         <textarea
           value={title}
           onChange={(e) => setTitle(e.target.value)}
@@ -89,9 +77,8 @@ function Editor({ notes, setNotes, note, onSave, onDelete, theme }) {
             ${isDark ? "bg-slate-800 text-white border border-slate-700" : "bg-slate-100 text-black border-transparent"}`}
         ></textarea>
 
-        {/* انتخاب دسته بندی */}
         <select
-          className={`pl-4 pb-7 pt-3.5 rounded-[15px] mt-5 w-[25%] h-[10vh] outline-none transition-colors cursor-pointer
+          className={`pl-4 pb-7 pt-2.5 rounded-[15px] mt-5 w-[25%] h-[10vh] outline-none transition-colors cursor-pointer
             ${isDark ? "bg-slate-800 text-white border border-slate-700" : "bg-slate-100 text-black"}`}
           onChange={(e) => setCategory(e.target.value)}
           value={category}
@@ -110,7 +97,6 @@ function Editor({ notes, setNotes, note, onSave, onDelete, theme }) {
           </option>
         </select>
 
-        {/* فیلد متن اصلی */}
         <textarea
           value={snippet}
           onChange={(e) => setSnippet(e.target.value)}
